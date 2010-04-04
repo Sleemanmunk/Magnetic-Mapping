@@ -1,0 +1,2 @@
+NXTmac='00:16:53:06:EA:61'
+NXTname='NXT'
