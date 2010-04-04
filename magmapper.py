@@ -42,30 +42,32 @@ def record_data(bot):
 #--MAIN--
 
 screen = c.initscr() #begin the curses environment
-c.noecho()#stop characters auto-echoing to screen
-screen.addstr("Hit q to end...\n")
-finished = False
-movement = STOPPED
+try:
+    c.noecho()#stop characters auto-echoing to screen
+    screen.addstr("Hit q to end...\n")
+    finished = False
+    movement = STOPPED
 
-# Now mainloop runs until "finished"
-while not finished:
-	key = get_key(screen)
-	if key == UP_ARROW:
-		if movement != FORWARD:
-			movement = move(bot,FORWARD)
-		else
-			movement = stop(bot)
-	elif key == DOWN_ARROW:
-		if movement != BACKWARD:
-			movement = move(bot,BACKWARD)
-		else
-			movement = stop(bot)
-	elif key == SPACEBAR:
-		movement = stop(bot)
-		record_data()
-	elif key == Q:
-		finished = True
+    # Now mainloop runs until "finished"
+    while not finished:
+    	key = get_key(screen)
+	    if key == UP_ARROW:
+		    if movement != FORWARD:
+		    	movement = move(bot,FORWARD)
+		    else
+		    	movement = stop(bot)
+	    elif key == DOWN_ARROW:
+	    	if movement != BACKWARD:
+	    		movement = move(bot,BACKWARD)
+	    	else
+	    		movement = stop(bot)
+	    elif key == SPACEBAR:
+	    	movement = stop(bot)
+	    	record_data()
+    	elif key == Q:
+	    	finished = True
 
-c.endwin() #This is critical!
-#If the program exits before this function is called
-#Terrible things will happen
+finally:
+    c.endwin() #This is critical!
+    #If the program exits before this function is called
+    #Terrible things will happen
