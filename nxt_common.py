@@ -19,7 +19,7 @@ BASE_SPEED=50
 #
 DEFAULT_TESTS=2
 
-def find_bot(NXTmac):
+def find_bot():
 	print 'Looking for brick ...'
 	sock = nxt.locator.find_one_brick(host=NXTmac,name=NXTname)
 	print 'Found brick or timed-out ...'
