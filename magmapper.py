@@ -1,6 +1,7 @@
 from nxt_common import *
 import record_data_lib
 import nxt.hicompass as hicompass
+from datetime import datetime
 
 import curses as c
 #Some notes about using curses:
@@ -8,13 +9,6 @@ import curses as c
 #Everything you're working on will be temporarily erased
 #and you will return to it when the program is finished.
 #When in curses mode, instead of print, use screen.addstr
-
-
-#Expected Values
-X_NORTH = 0
-X_EAST = 90
-X_SOUTH = 180
-X_WEST = 270
 
 #Ports on NXT for sensors and a key for easy conversion to user-friendly output
 SENSOR_PORTS = [PORT_1,PORT_2,PORT_3,PORT_4]
@@ -26,6 +20,10 @@ UP_ARROW=65
 DOWN_ARROW=66
 SPACEBAR=32
 Q=113
+W=ord("w")
+A=ord("a")
+S=ord("s")
+D=ord("d")
 
 BASE_SPEED=66
 
@@ -47,14 +45,19 @@ def stop(bot):
 	Motor(bot, PORT_ALL).stop()
 	return STOPPED
 
-def record_data(bot):
-	pass
+def record_data(bot,compasses,compass_ids,x,y,room):
+	for i in range(0,len(compasses))
+		actual_value=sense(compasses[i],5)
+		id = compass_ids[i]
+		datetime = datetime.now()
+		
 #--MAIN--
 
 bot = find_bot()
 
 compasses = []
 compass_ids = []
+compass_dirs = []
 
 for port in SENSOR_PORTS:
 	try:
@@ -64,9 +67,14 @@ for port in SENSOR_PORTS:
 							#an extra space
 			print "Compass Detected in", PORT_KEY[port]
 			compass_ids.append(raw_input("Compass_ID: "))
+			compass_dirs.append(input("Expected_Value: "))
 			compasses.append(compass)
 	except hicompass.DirProtError:
 		print "Could not communicate"	
+
+x = input("x origin: ")
+y = input("y origin: ")
+room = input("room ID: ")
 
 screen = c.initscr() #begin the curses environment
 c.noecho()#stop characters auto-echoing to screen
@@ -89,9 +97,17 @@ while not finished:
 			movement = stop(bot)
 	elif key == SPACEBAR:
 		movement = stop(bot)
-		record_data(bot)
+		record_data(bot,compasses,compass_ids)
 	elif key == Q:
 		finished = True
+	elif key == W:
+		y+=1
+	elif key == A:
+		x-=1
+	elif key == S:
+		y-=1
+	elif key == D:
+		y+=1
 
 c.endwin() #This is critical!
 #If the program exits before this function is called
