@@ -1,5 +1,5 @@
 from nxt_common import *
-import record_data_lib
+import record_data_lib as rdlib
 import nxt.hicompass as hicompass
 from datetime import datetime
 
@@ -45,20 +45,19 @@ def stop(bot):
 	Motor(bot, PORT_ALL).stop()
 	return STOPPED
 
-def record_data(bot,compasses,compass_ids,x,y,room):
-	for i in range(0,len(compasses))
-		actual_value=sense(compasses[i],5)
-		id = compass_ids[i]
-		datetime = datetime.now()
-		
+def record_data(datafile,compasses,compass_ids,expected_values,x,y,room):
+	readings = []
+	for compass in compasses:	
+		readings.append(sense(compass,5))
+	timestamp = datetime.now()
+	rdlib.record_data(datafile,compass_ids,room,timestamp,x,y,expected_values,readings)
 #--MAIN--
 
 bot = find_bot()
 
 compasses = []
 compass_ids = []
-compass_dirs = []
-
+expected_values = []
 for port in SENSOR_PORTS:
 	try:
 		compass=hicompass.CompassSensor(bot,port)
@@ -67,7 +66,7 @@ for port in SENSOR_PORTS:
 							#an extra space
 			print "Compass Detected in", PORT_KEY[port]
 			compass_ids.append(raw_input("Compass_ID: "))
-			compass_dirs.append(input("Expected_Value: "))
+			expected_values.append(input("Expected_Value: "))
 			compasses.append(compass)
 	except hicompass.DirProtError:
 		print "Could not communicate"	
@@ -75,43 +74,52 @@ for port in SENSOR_PORTS:
 x = input("x origin: ")
 y = input("y origin: ")
 room = input("room ID: ")
+filepath = raw_input ("Data File: ")
+datafile = open(filepath,'w')
+
 
 screen = c.initscr() #begin the curses environment
 try:
-    c.noecho()#stop characters auto-echoing to screen
-    screen.addstr("Hit q to end...\n")
-    finished = False
-    movement = STOPPED
+	c.noecho()#stop characters auto-echoing to screen
+	screen.addstr("Hit q to end...\n")
+	finished = False
+	movement = STOPPED
 
-# Now mainloop runs until "finished"
-while not finished:
-	key = get_key(screen)
-	if key == UP_ARROW:
-		if movement != FORWARD:
-			movement = move(bot,FORWARD)
-		else:
+	# Now mainloop runs until "finished"
+	while not finished:
+		key = get_key(screen)
+		if key == UP_ARROW:
+			if movement != FORWARD:
+				movement = move(bot,FORWARD)
+			else:
+				movement = stop(bot)
+		elif key == DOWN_ARROW:
+			if movement != BACKWARD:
+				movement = move(bot,BACKWARD)
+			else:
+				movement = stop(bot)
+		elif key == SPACEBAR:
 			movement = stop(bot)
-	elif key == DOWN_ARROW:
-		if movement != BACKWARD:
-			movement = move(bot,BACKWARD)
-		else:
-			movement = stop(bot)
-	elif key == SPACEBAR:
-		movement = stop(bot)
-		record_data(bot,compasses,compass_ids)
-	elif key == Q:
-		finished = True
-	elif key == W:
-		y+=1
-	elif key == A:
-		x-=1
-	elif key == S:
-		y-=1
-	elif key == D:
-		y+=1
+			screen.addstr("Recording data...")
+			record_data(datafile,compasses,compass_ids,expected_values,x,y,room)
+		elif key == Q:
+			finished = True
+		elif key == W:
+			y+=1
+			screen.addstr("current coordinates: (" + str(x) + "," + str(y) + ")\n")
+		elif key == A:
+			x-=1
+			screen.addstr("current coordinates: (" + str(x) + "," + str(y) + ")\n")
+		elif key == S:
+			y-=1
+			screen.addstr("current coordinates: (" + str(x) + "," + str(y) + ")\n")
+		elif key == D:
+			x+=1
+			screen.addstr("current coordinates: (" + str(x) + "," + str(y) + ")\n")
+finally:
+	c.endwin() #This is critical!
+	#If the program exits before this function is called
+	#Terrible things will happen
 
-c.endwin() #This is critical!
-#If the program exits before this function is called
-#Terrible things will happen
-
-stop_bot(bot)
+	datafile.close()
+	stop_bot(bot)
