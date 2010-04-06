@@ -77,11 +77,13 @@ y = input("y origin: ")
 room = input("room ID: ")
 
 screen = c.initscr() #begin the curses environment
-c.noecho()#stop characters auto-echoing to screen
-screen.addstr("Hit q to end...\n")
-finished = False
-movement = STOPPED
+try:
+    c.noecho()#stop characters auto-echoing to screen
+    screen.addstr("Hit q to end...\n")
+    finished = False
+    movement = STOPPED
 
+<<<<<<< HEAD:magmapper.py
 # Now mainloop runs until "finished"
 while not finished:
 	key = get_key(screen)

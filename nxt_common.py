@@ -1,17 +1,27 @@
+# Allow us to locate the robot
 import nxt.locator
+# Allow multithreading
 from threading import Thread
+# Allow use of sensors
 from nxt.sensor import *
+# Allow use of motors
 from nxt.motor import *
+# Allow the robot to wait for certain time increments
 from time import sleep
+#
 import sys
+# Import everything relevant about the current bot
+from bot_id import *
 
+# 
 BASE_SPEED=50
 
+#
 DEFAULT_TESTS=2
 
-def find_bot(NXTmac='00:16:53:06:EA:61'):
+def find_bot():
 	print 'Looking for brick ...'
-	sock = nxt.locator.find_one_brick(host=NXTmac,name='NXT')
+	sock = nxt.locator.find_one_brick(host=NXTmac,name=NXTname)
 	print 'Found brick or timed-out ...'
 	if sock:
 		print 'Connecting to the brick ...'
