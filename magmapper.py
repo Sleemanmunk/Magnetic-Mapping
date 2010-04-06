@@ -83,7 +83,6 @@ try:
     finished = False
     movement = STOPPED
 
-<<<<<<< HEAD:magmapper.py
 # Now mainloop runs until "finished"
 while not finished:
 	key = get_key(screen)
