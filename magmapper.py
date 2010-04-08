@@ -66,7 +66,7 @@ for port in SENSOR_PORTS:
 							#an extra space
 			print "Compass Detected in", PORT_KEY[port]
 			compass_ids.append(raw_input("Compass_ID: "))
-			expected_values.append(input("Expected_Value: "))
+			#expected_values.append(input("Expected_Value: "))
 			compasses.append(compass)
 	except hicompass.DirProtError:
 		print "Could not communicate"	
@@ -85,7 +85,7 @@ try:
 	finished = False
 	movement = STOPPED
 
-	# Now mainloop runs until "finished"
+# Now mainloop runs until "finished"
 	while not finished:
 		key = get_key(screen)
 		if key == UP_ARROW:
@@ -106,16 +106,20 @@ try:
 			finished = True
 		elif key == W:
 			y+=1
-			screen.addstr("current coordinates: (" + str(x) + "," + str(y) + ")\n")
+			new_location = True
 		elif key == A:
 			x-=1
-			screen.addstr("current coordinates: (" + str(x) + "," + str(y) + ")\n")
+			new_location = True
 		elif key == S:
 			y-=1
-			screen.addstr("current coordinates: (" + str(x) + "," + str(y) + ")\n")
+			new_location = True
 		elif key == D:
 			x+=1
+			new_location = True
+		if new_location:
+			screen.clear()
 			screen.addstr("current coordinates: (" + str(x) + "," + str(y) + ")\n")
+			new_location = False
 finally:
 	c.endwin() #This is critical!
 	#If the program exits before this function is called
