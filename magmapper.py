@@ -37,14 +37,6 @@ def get_key(screen):
 		key = screen.getch() # fetch second character
 	return key
 
-def move(bot,direction):
-	Motor(bot, PORT_ALL).run(direction*BASE_SPEED) #FORWARD=1 BACKWARD=-1
-	return direction 
-
-def stop(bot):
-	Motor(bot, PORT_ALL).stop()
-	return STOPPED
-
 def record_data(datafile,compasses,compass_ids,expected_values,x,y,room):
 	readings = []
 	for compass in compasses:	
@@ -77,6 +69,19 @@ room = input("room ID: ")
 filepath = raw_input ("Data File: ")
 datafile = open(filepath,'w')
 
+raw_input("Begin Calibration?")
+
+print "calibrating..."
+
+for compass in compasses:
+	compass.calibrate_mode()
+
+time.sleep(CALIBRATE_TIME)
+
+for compass in compasses:
+	compass.measure_mode()
+
+print "calibration complete"
 
 screen = c.initscr() #begin the curses environment
 try:
@@ -88,16 +93,6 @@ try:
 # Now mainloop runs until "finished"
 	while not finished:
 		key = get_key(screen)
-		if key == UP_ARROW:
-			if movement != FORWARD:
-				movement = move(bot,FORWARD)
-			else:
-				movement = stop(bot)
-		elif key == DOWN_ARROW:
-			if movement != BACKWARD:
-				movement = move(bot,BACKWARD)
-			else:
-				movement = stop(bot)
 		elif key == SPACEBAR:
 			movement = stop(bot)
 			screen.addstr("Recording data...")
