@@ -70,7 +70,8 @@ room = input("room ID: ")
 filepath = raw_input ("Data File: ")
 datafile = open(filepath,'w')
 
-if not raw_input("Begin Calibration?") == "n":
+calibrate = raw_input("Calibrate?(default yes)").lower()
+if ( not calibrate  == "n" ) and ( not calibrate == "no" ) :
 	print "calibrating..."
 	
 	run_calibrator(compasses)
