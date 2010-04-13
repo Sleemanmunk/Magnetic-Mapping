@@ -97,6 +97,7 @@ try:
 			movement = stop(bot)
 			screen.addstr("Recording data...")
 			record_data(datafile,compasses,compass_ids,expected_values,x,y,room)
+			screen.addstr("Data Recorded")
 		elif key == Q:
 			finished = True
 		elif key == W:
