@@ -2,6 +2,7 @@ from nxt_common import *
 import record_data_lib as rdlib
 import nxt.hicompass as hicompass
 from datetime import datetime
+from spinner import *
 
 import curses as c
 #Some notes about using curses:
@@ -69,19 +70,20 @@ room = input("room ID: ")
 filepath = raw_input ("Data File: ")
 datafile = open(filepath,'w')
 
-raw_input("Begin Calibration?")
+if not raw_input("Begin Calibration?") == "n":
+	print "calibrating..."
 
-print "calibrating..."
+	for compass in compasses:
+		compass.calibrate_mode()
 
-for compass in compasses:
-	compass.calibrate_mode()
+	run_calibrator()
 
-time.sleep(CALIBRATE_TIME)
+	for compass in compasses:
+		compass.measure_mode()
 
-for compass in compasses:
-	compass.measure_mode()
-
-print "calibration complete"
+	print "calibration complete"
+else:
+	print "skipped calibration"
 
 screen = c.initscr() #begin the curses environment
 try:
@@ -90,6 +92,7 @@ try:
 	finished = False
 	movement = STOPPED
 
+	new_location = False
 # Now mainloop runs until "finished"
 	while not finished:
 		key = get_key(screen)
