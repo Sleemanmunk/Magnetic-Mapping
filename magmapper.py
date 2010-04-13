@@ -72,14 +72,8 @@ datafile = open(filepath,'w')
 
 if not raw_input("Begin Calibration?") == "n":
 	print "calibrating..."
-
-	for compass in compasses:
-		compass.calibrate_mode()
-
-	run_calibrator()
-
-	for compass in compasses:
-		compass.measure_mode()
+	
+	run_calibrator(compasses)
 
 	print "calibration complete"
 else:
@@ -90,14 +84,12 @@ try:
 	c.noecho()#stop characters auto-echoing to screen
 	screen.addstr("Hit q to end...\n")
 	finished = False
-	movement = STOPPED
 
 	new_location = False
 # Now mainloop runs until "finished"
 	while not finished:
 		key = get_key(screen)
 		if key == SPACEBAR:
-			movement = stop(bot)
 			screen.addstr("Recording data...")
 			record_data(datafile,compasses,compass_ids,expected_values,x,y,room)
 			screen.addstr("Data Recorded")
