@@ -93,7 +93,7 @@ try:
 # Now mainloop runs until "finished"
 	while not finished:
 		key = get_key(screen)
-		elif key == SPACEBAR:
+		if key == SPACEBAR:
 			movement = stop(bot)
 			screen.addstr("Recording data...")
 			record_data(datafile,compasses,compass_ids,expected_values,x,y,room)
