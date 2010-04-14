@@ -1,7 +1,7 @@
 from nxt_common import *
 import record_data_lib as rdlib
 import nxt.hicompass as hicompass
-from datetime import datetime
+from time import time
 from spinner import *
 
 import curses as c
@@ -42,7 +42,7 @@ def record_data(datafile,compasses,compass_ids,expected_values,x,y,room):
 	readings = []
 	for compass in compasses:	
 		readings.append(sense(compass,5))
-	timestamp = datetime.now()
+	timestamp = time.time()
 	rdlib.record_data(datafile,compass_ids,room,timestamp,x,y,expected_values,readings)
 #--MAIN--
 
@@ -51,34 +51,34 @@ def record_data(datafile,compasses,compass_ids,expected_values,x,y,room):
 compasses = []
 compass_ids = []
 expected_values = []
-#for port in SENSOR_PORTS:
-#	try:
-#		compass=hicompass.CompassSensor(bot,port)
-#		print "Testing",PORT_KEY[port]
-#		if compass.get_type() == "Compass ":#note that there's
-#							#an extra space
-#			print "Compass Detected in", PORT_KEY[port]
-#			compass_ids.append(raw_input("Compass_ID: "))
-#			#expected_values.append(input("Expected_Value: "))
-#			compasses.append(compass)
-#	except hicompass.DirProtError:
-		#print "Could not communicate"	
+for port in SENSOR_PORTS:
+	try:
+		compass=hicompass.CompassSensor(bot,port)
+		print "Testing",PORT_KEY[port]
+		if compass.get_type() == "Compass ":#note that there's
+							#an extra space
+			print "Compass Detected in", PORT_KEY[port]
+			compass_ids.append(raw_input("Compass_ID: "))
+			expected_values.append(input("Expected_Value: "))
+			compasses.append(compass)
+	except hicompass.DirProtError:
+		print "Could not communicate"	
 
 x = input("x origin: ")
 y = input("y origin: ")
-#room = input("room ID: ")
-#filepath = raw_input ("Data File: ")
-#datafile = open(filepath,'w')
+room = input("room ID: ")
+filepath = raw_input ("Data File: ")
+datafile = open(filepath,'w')
 
-#calibrate = raw_input("Calibrate?(default yes)").lower()
-#if ( not calibrate  == "n" ) and ( not calibrate == "no" ) :
-#	print "calibrating..."
-#	
-#	run_calibrator(compasses)
-#
-#	print "calibration complete"
-#else:
-#	print "skipped calibration"
+calibrate = raw_input("Calibrate?(default yes)").lower()
+if ( not calibrate  == "n" ) and ( not calibrate == "no" ) :
+	print "calibrating..."
+	
+	run_calibrator(compasses)
+
+	print "calibration complete"
+else:
+	print "skipped calibration"
 
 screen = c.initscr() #begin the curses environment
 try:
