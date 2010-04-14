@@ -46,7 +46,7 @@ def record_data(datafile,compasses,compass_ids,expected_values,x,y,room):
 	rdlib.record_data(datafile,compass_ids,room,timestamp,x,y,expected_values,readings)
 #--MAIN--
 
-#bot = find_bot()
+bot = find_bot()
 
 compasses = []
 compass_ids = []
