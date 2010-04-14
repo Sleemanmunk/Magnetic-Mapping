@@ -46,49 +46,54 @@ def record_data(datafile,compasses,compass_ids,expected_values,x,y,room):
 	rdlib.record_data(datafile,compass_ids,room,timestamp,x,y,expected_values,readings)
 #--MAIN--
 
-bot = find_bot()
+#bot = find_bot()
 
 compasses = []
 compass_ids = []
 expected_values = []
-for port in SENSOR_PORTS:
-	try:
-		compass=hicompass.CompassSensor(bot,port)
-		print "Testing",PORT_KEY[port]
-		if compass.get_type() == "Compass ":#note that there's
-							#an extra space
-			print "Compass Detected in", PORT_KEY[port]
-			compass_ids.append(raw_input("Compass_ID: "))
-			#expected_values.append(input("Expected_Value: "))
-			compasses.append(compass)
-	except hicompass.DirProtError:
-		print "Could not communicate"	
+#for port in SENSOR_PORTS:
+#	try:
+#		compass=hicompass.CompassSensor(bot,port)
+#		print "Testing",PORT_KEY[port]
+#		if compass.get_type() == "Compass ":#note that there's
+#							#an extra space
+#			print "Compass Detected in", PORT_KEY[port]
+#			compass_ids.append(raw_input("Compass_ID: "))
+#			#expected_values.append(input("Expected_Value: "))
+#			compasses.append(compass)
+#	except hicompass.DirProtError:
+		#print "Could not communicate"	
 
 x = input("x origin: ")
 y = input("y origin: ")
-room = input("room ID: ")
-filepath = raw_input ("Data File: ")
-datafile = open(filepath,'w')
+#room = input("room ID: ")
+#filepath = raw_input ("Data File: ")
+#datafile = open(filepath,'w')
 
-calibrate = raw_input("Calibrate?(default yes)").lower()
-if ( not calibrate  == "n" ) and ( not calibrate == "no" ) :
-	print "calibrating..."
-	
-	run_calibrator(compasses)
-
-	print "calibration complete"
-else:
-	print "skipped calibration"
+#calibrate = raw_input("Calibrate?(default yes)").lower()
+#if ( not calibrate  == "n" ) and ( not calibrate == "no" ) :
+#	print "calibrating..."
+#	
+#	run_calibrator(compasses)
+#
+#	print "calibration complete"
+#else:
+#	print "skipped calibration"
 
 screen = c.initscr() #begin the curses environment
 try:
 	c.noecho()#stop characters auto-echoing to screen
-	screen.addstr("Hit q to end...\n")
 	finished = False
-
-	new_location = False
+	redraw = True
 # Now mainloop runs until "finished"
 	while not finished:
+		if redraw:
+			screen.clear()
+			screen.addstr("current coordinates: (" + str(x) + "," + str(y) + ")\n")
+			screen.addstr("Controls:\n")
+			screen.addstr("Move coordinates:   w    Record Data: Spacebar  Quit: q\n")
+			screen.addstr("                  a s d\n")
+			redraw = False
 		key = get_key(screen)
 		if key == SPACEBAR:
 			screen.addstr("Recording data...")
@@ -98,20 +103,16 @@ try:
 			finished = True
 		elif key == W:
 			y+=1
-			new_location = True
+			redraw = True
 		elif key == A:
 			x-=1
-			new_location = True
+			redraw = True
 		elif key == S:
 			y-=1
-			new_location = True
+			redraw = True
 		elif key == D:
 			x+=1
-			new_location = True
-		if new_location:
-			screen.clear()
-			screen.addstr("current coordinates: (" + str(x) + "," + str(y) + ")\n")
-			new_location = False
+			redraw = True
 finally:
 	c.endwin() #This is critical!
 	#If the program exits before this function is called
