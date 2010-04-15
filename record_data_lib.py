@@ -7,16 +7,16 @@ def record_data( data_file, sensor_ids, room, timestamp, x, y, expected_values, 
     exit()
 
   csv_line = ''
-  x = 0
+  i = 0
   for sensor in sensor_ids:
 	csv_line += str( sensor ) + ','
   	csv_line += str( room ) + ','
   	csv_line += str( timestamp ) + ','
   	csv_line += str( x ) + ','
   	csv_line += str( y ) + ','
-    	csv_line += str( expected_values[x] ) + ','
-    	csv_line += str( readings[x] ) + ','
-	x += 1
+    	csv_line += str( expected_values[i] ) + ','
+    	csv_line += str( readings[i] ) + ','
+	i += 1
 	csv_line = csv_line[0:len(csv_line)-1] + "\n"
 
   # change last comma to a newline

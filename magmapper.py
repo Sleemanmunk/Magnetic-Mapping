@@ -66,7 +66,11 @@ for port in SENSOR_PORTS:
 
 x = input("x origin: ")
 y = input("y origin: ")
-room = input("room ID: ")
+room = raw_input("room ID {D124, D128, D129} : ")
+while not ((room == "D124") or (room == "D128") or (room == "D129")):
+	print "invalid room"
+	room = raw_input("room ID {D124, D128, D129} : ")
+	
 filepath = raw_input ("Data File: ")
 datafile = open(filepath,'w')
 
