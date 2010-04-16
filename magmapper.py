@@ -11,6 +11,17 @@ import curses as c
 #and you will return to it when the program is finished.
 #When in curses mode, instead of print, use screen.addstr
 
+def sound(bot):		#sound to be played upon successful exectution of a process.
+	sleep(2)
+	bot.play_tone(900, 100)
+	bot.play_tone(800, 100)
+	bot.play_tone(700, 100)
+	bot.play_tone(600, 100)
+	bot.play_tone(500, 100)
+	bot.play_tone(400, 100)
+	bot.play_tone(1000, 200)
+
+
 #Ports on NXT for sensors and a key for easy conversion to user-friendly output
 SENSOR_PORTS = [PORT_1,PORT_2,PORT_3,PORT_4]
 PORT_KEY = {PORT_1:"Port 1",PORT_2:"Port 2",PORT_3:"Port 3",PORT_4:"Port 4"}
@@ -103,6 +114,7 @@ try:
 			screen.addstr("Recording data...")
 			record_data(datafile,compasses,compass_ids,expected_values,x,y,room)
 			screen.addstr("Data Recorded")
+			sound(bot)
 		elif key == Q:
 			finished = True
 		elif key == W:
